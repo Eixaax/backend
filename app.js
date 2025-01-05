@@ -6,7 +6,6 @@ const bcrypt=require("bcryptjs");
 const jwt=require('jsonwebtoken');
 require('./UserDetails')
 const User=mongoose.model("UserInfo");
-const UserDevices = require('./UserDevices'); // Import the UserDevices model
 const AudioRecordings = require('./AudioRecordings'); // Import the model
 
 const { Buffer } = require('buffer');
@@ -160,37 +159,4 @@ app.post('/upload-recording', async (req, res) => {
     }
   });
 
-app.post('/device/connect', async (req, res) => {
-  const { deviceId } = req.body;
 
-  if (!deviceId) {
-    return res.status(400).json({ success: false, message: 'Device ID is required' });
-  }
-
-  try {
-    // Check if the device already exists in the database
-    let userDevice = await UserDevices.findOne({ deviceId });
-
-    if (!userDevice) {
-      // If the device does not exist, create a new entry
-      userDevice = new UserDevices({
-        deviceId: deviceId,
-        status: 'connected',  // Mark the device as connected
-      });
-
-      await userDevice.save();
-      console.log('Device saved to UserDevices');
-    } else {
-      // If the device already exists, update its status to connected
-      userDevice.status = 'connected';
-      await userDevice.save();
-      console.log('Device status updated to connected');
-    }
-
-    // Respond to the client with success message
-    res.json({ success: true, status: 'connected' });
-  } catch (error) {
-    console.error('Error saving or updating device:', error);
-    res.status(500).json({ success: false, message: 'Failed to save device' });
-  }
-});
