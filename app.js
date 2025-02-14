@@ -11,8 +11,11 @@ const AudioRecordings = require('./AudioRecordings'); // Import the model
 const { Buffer } = require('buffer');
 
 const cors = require('cors');
-app.use(cors());
-
+app.use(cors({
+    origin: '*', // Allow all domains or you can specify the exact domain
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow required methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow required headers
+}));
 const mongoUrl="mongodb+srv://isa:admin@cluster0.v0xnx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 const JWT_SECRET = "a9f8b27c9d3e4f5b6c7d8e9f1029384756c7d8e9f1029384756a7b8c9d0e1f2";
